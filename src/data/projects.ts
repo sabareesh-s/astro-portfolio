@@ -40,7 +40,7 @@ const projects: Project[] = [
     title: "3D rendering with Three.js",
     techs: ["ReactJS", "Three.js", "React Three Fiber (R3F)"],
     github: "https://github.com/sabareesh-s/threejs-webpack-starter/commits/master",
-    link: "https://reactjs-weather-search-app.netlify.app/",
+    link: "https://grand-youtiao-dd3519.netlify.app",
   }
   // {
   //   title: "Portfolio / Template",
