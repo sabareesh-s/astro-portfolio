@@ -11,11 +11,13 @@ const DEFAULT_TITLE_PAGE = "Sabareesh S - Portfolio";
 const DEFAULT_DESCRIPTION_PAGE =
   "Sabareesh S - Webflow & front-end developer in Bangalore. Marketing sites, motion, and the odd Three.js experiment.";
 const DEFAULT_URL_SITE = SITE_URL;
+// Absolute URL — social scrapers can't resolve a relative image path
+const OG_IMAGE = new URL("/opengraph-image.jpg", DEFAULT_URL_SITE).href;
 
 const openGraph = {
   title: title || og?.title || DEFAULT_TITLE_PAGE,
   type: og?.type || "website",
-  image: og?.image || "/opengraph-image.jpg",
+  image: og?.image || OG_IMAGE,
   alt: og?.alt || "Sabareesh S - portfolio",
   url: DEFAULT_URL_SITE,
   description: og?.description || DEFAULT_DESCRIPTION_PAGE,
@@ -38,9 +40,6 @@ const openGraph = {
         alt: openGraph.alt,
       },
     }}
-    twitter={{
-      creator: "@itsstormzz_",
-    }}
     extend={{
       link: [
         { rel: "icon", href: "/favicon.svg" },
@@ -56,7 +55,6 @@ const openGraph = {
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: openGraph.title },
         { name: "twitter:description", content: openGraph.description },
-        { name: "twitter:site", content: "@itsstormzz_" },
       ],
     }}
   />

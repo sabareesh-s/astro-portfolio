@@ -12,7 +12,6 @@ import clientWork from "@/data/clientWork";
 import experience from "@/data/experience";
 import skills from "@/data/skills";
 
-const [featured, ...restWork] = clientWork;
 const experiments = projects.filter((p) => p.image);
 const codeProjects = projects.filter((p) => !p.image);
 ---
@@ -21,17 +20,20 @@ const codeProjects = projects.filter((p) => !p.image);
   <main class="flex flex-col gap-20 md:gap-28">
     <!-- Hero -->
     <article
-      class="flex flex-col gap-8 md:flex-row-reverse md:items-start md:justify-end md:gap-12"
+      class="flex flex-col gap-8 md:flex-row-reverse md:items-center md:justify-between md:gap-12"
     >
       <img
+        data-reveal
+        style="--reveal-delay:120ms"
         src="https://i.imgur.com/OA6GzZt.jpg"
         alt="Sabareesh S"
-        class="h-28 w-28 self-center rounded-full object-cover ring-2 ring-neutral-700 md:h-36 md:w-36"
+        class="h-28 w-28 self-center rounded-full object-cover ring-2 ring-hair-strong md:h-36 md:w-36"
       />
 
       <div class="flex flex-col gap-6">
         <span
-          class="flex w-fit items-center gap-2 rounded-full border border-neutral-700 px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-neutral-300"
+          data-reveal
+          class="flex w-fit items-center gap-2 rounded-full border border-hair-strong px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-ink-soft"
         >
           <span class="relative flex h-2 w-2">
             <span
@@ -43,61 +45,61 @@ const codeProjects = projects.filter((p) => !p.image);
           Around for freelance & new work
         </span>
 
-        <div class="flex flex-col gap-3">
-          <p class="font-mono text-xs uppercase tracking-[0.2em] text-amber-500">
+        <div data-reveal style="--reveal-delay:90ms" class="flex flex-col gap-3">
+          <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent">
             Webflow & front-end dev · Bangalore
           </p>
-          <h1 class="font-display text-4xl font-semibold text-neutral-100 md:text-5xl">
+          <h1 class="font-display text-4xl font-medium tracking-tight text-ink md:text-5xl">
             {presentation.title}
           </h1>
         </div>
 
         <h2
-          class="max-w-[62ch] leading-6 text-neutral-300"
+          data-reveal
+          style="--reveal-delay:180ms"
+          class="max-w-[62ch] leading-6 text-ink-soft"
           set:html={convertAsteriskToStrongTag(presentation.description)}
         />
 
-        <SocialLinks />
+        <div data-reveal style="--reveal-delay:260ms">
+          <SocialLinks />
+        </div>
       </div>
     </article>
 
     <!-- Client work (Webflow) -->
-    <article id="work" class="flex scroll-mt-8 flex-col gap-8">
+    <article id="work" data-reveal class="flex scroll-mt-8 flex-col gap-8">
       <header class="flex flex-col gap-2">
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-amber-500">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent">
           Client work
         </p>
-        <h3 class="font-display text-2xl text-neutral-100">
+        <h3 class="font-display text-2xl text-ink">
           Sites I've shipped
         </h3>
-        <p class="max-w-[60ch] text-sm text-neutral-500">
+        <p class="max-w-[60ch] text-sm text-muted">
           Sites I've built end to end - mostly Webflow, some full-stack Next.js.
           Layout, motion, SEO, backend and all. Over 30 Webflow projects so far,
           and more - here's a handful.
         </p>
       </header>
 
-      <!-- Featured -->
-      <WorkCard {...featured} featured />
-
       <!-- Grid -->
       <section class="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        {restWork.map((project) => <WorkCard {...project} />)}
+        {clientWork.map((project) => <WorkCard {...project} />)}
       </section>
     </article>
 
     <!-- Experiments -->
-    <article class="flex flex-col gap-8">
+    <article data-reveal class="flex flex-col gap-8">
       <header class="flex flex-col gap-2">
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-amber-500">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent">
           Playground
         </p>
-        <h3 class="font-display text-2xl text-neutral-100">
+        <h3 class="font-display text-2xl text-ink">
           Stuff I made for fun
         </h3>
-        <p class="max-w-[60ch] text-sm text-neutral-500">
-          Webflow concepts, Three.js experiments, and UI builds - mostly excuses
-          to try something new.
+        <p class="max-w-[60ch] text-sm text-muted">
+          Webflow concepts, Three.js experiments, and UI builds.
         </p>
       </header>
 
@@ -108,7 +110,7 @@ const codeProjects = projects.filter((p) => !p.image);
       {
         codeProjects.length > 0 && (
           <div class="flex flex-col gap-4">
-            <p class="font-mono text-xs uppercase tracking-wider text-neutral-500">
+            <p class="font-mono text-xs uppercase tracking-wider text-muted">
               Also, some things I coded
             </p>
             <section class="flex flex-col gap-4">
@@ -122,29 +124,29 @@ const codeProjects = projects.filter((p) => !p.image);
     </article>
 
     <!-- Experience -->
-    <article id="experience" class="flex scroll-mt-8 flex-col gap-8">
+    <article id="experience" data-reveal class="flex scroll-mt-8 flex-col gap-8">
       <header class="flex flex-col gap-2">
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-amber-500">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent">
           Career
         </p>
-        <h3 class="font-display text-2xl text-neutral-100">Where I've worked</h3>
+        <h3 class="font-display text-2xl text-ink">Where I've worked</h3>
       </header>
 
       <section class="flex flex-col gap-3">
         {
           experience.map((job) => (
-            <div class="flex w-full flex-col justify-between gap-2 rounded-lg border border-neutral-800 p-4 transition-colors hover:border-neutral-600 md:flex-row md:items-center">
+            <div class="flex w-full flex-col justify-between gap-2 rounded-lg border border-hair p-4 transition-colors hover:border-hair-strong md:flex-row md:items-center">
               <div class="flex flex-col gap-1">
-                <p class="font-display font-medium text-neutral-100">
+                <p class="font-display font-medium text-ink">
                   {job.role} · {job.company}
                 </p>
                 {job.techs && (
-                  <p class="font-mono text-[11px] uppercase tracking-wider text-neutral-500">
+                  <p class="font-mono text-[11px] uppercase tracking-wider text-muted">
                     {job.techs.join(" · ")}
                   </p>
                 )}
               </div>
-              <p class="whitespace-nowrap font-mono text-xs text-neutral-400">
+              <p class="whitespace-nowrap font-mono text-xs text-body">
                 {job.period}
               </p>
             </div>
@@ -154,24 +156,24 @@ const codeProjects = projects.filter((p) => !p.image);
     </article>
 
     <!-- Tech stack -->
-    <article class="flex flex-col gap-6">
+    <article data-reveal class="flex flex-col gap-6">
       <header class="flex flex-col gap-2">
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-amber-500">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent">
           Toolkit
         </p>
-        <h3 class="font-display text-2xl text-neutral-100">What I use</h3>
+        <h3 class="font-display text-2xl text-ink">What I use</h3>
       </header>
 
       <div class="flex flex-col gap-4">
         {
           skills.map((group) => (
             <div class="flex flex-col gap-2 md:flex-row md:items-start md:gap-4">
-              <p class="w-36 shrink-0 font-mono text-[11px] uppercase tracking-wider text-neutral-500">
+              <p class="w-36 shrink-0 font-mono text-[11px] uppercase tracking-wider text-muted">
                 {group.label}
               </p>
               <ul class="flex flex-wrap gap-2">
                 {group.items.map((item) => (
-                  <li class="rounded-md border border-neutral-800 bg-neutral-900 px-3 py-1 text-xs text-neutral-300 transition-colors hover:border-amber-500/40 hover:text-neutral-100">
+                  <li class="rounded-md border border-hair bg-surface px-3 py-1 text-xs text-ink-soft transition-colors hover:border-accent/40 hover:text-ink">
                     {item}
                   </li>
                 ))}
@@ -185,17 +187,18 @@ const codeProjects = projects.filter((p) => !p.image);
     <!-- Contact -->
     <article
       id="contact"
-      class="flex scroll-mt-8 flex-col gap-6 rounded-2xl border border-neutral-800 bg-neutral-900/40 p-6 md:p-10"
+      data-reveal
+      class="flex scroll-mt-8 flex-col gap-6 rounded-2xl border border-hair bg-surface/40 p-6 md:p-10"
     >
       <div class="flex flex-col gap-2">
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-amber-500">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent">
           Contact
         </p>
-        <h3 class="font-display text-2xl text-neutral-100 md:text-3xl">
+        <h3 class="font-display text-2xl text-ink md:text-3xl">
           Say hi.
         </h3>
       </div>
-      <p class="max-w-[60ch] leading-6 text-neutral-300">
+      <p class="max-w-[60ch] leading-6 text-ink-soft">
         Working on something, or just want to talk shop? I'm at <Link
           href={`mailto:${presentation.mail}`}
           label={presentation.mail}

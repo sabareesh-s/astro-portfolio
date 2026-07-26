@@ -12,13 +12,13 @@ const formatTechs = (values: string[]) =>
 <>
   {
     isComingSoon && (
-      <div class="t group flex w-full flex-col justify-between gap-2 rounded-md border border-neutral-700 p-4 md:flex-row md:items-center">
+      <div class="t group flex w-full flex-col justify-between gap-2 rounded-md border border-hair-strong p-4 md:flex-row md:items-center">
         <div class="flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
-          <p class="text-neutral-100">{title}</p>
+          <p class="text-ink">{title}</p>
           <p>{formatTechs(techs)}</p>
         </div>
 
-        <p class="w-fit rounded-md bg-neutral-900 px-4 py-1">Soon</p>
+        <p class="w-fit rounded-md bg-surface px-4 py-1">Soon</p>
       </div>
     )
   }
@@ -26,12 +26,12 @@ const formatTechs = (values: string[]) =>
   {
     !isComingSoon && (
       <div
-        class="group flex w-full flex-col justify-between gap-3 rounded-md border border-neutral-700 p-4 transition-all duration-300 hover:-translate-y-1 hover:border-neutral-400 md:flex-row md:items-center"
+        class="group flex w-full flex-col justify-between gap-3 rounded-md border border-hair-strong p-4 transition-all duration-300 hover:-translate-y-1 hover:border-hair-strong md:flex-row md:items-center"
       >
         <div class="flex flex-col gap-1">
-          <p class="font-medium text-neutral-100">{title}</p>
-          {description && <p class="text-sm text-neutral-400">{description}</p>}
-          <p class="mt-1 text-xs text-neutral-500">{formatTechs(techs)}</p>
+          <p class="font-medium text-ink">{title}</p>
+          {description && <p class="text-sm text-body">{description}</p>}
+          <p class="mt-1 text-xs text-muted">{formatTechs(techs)}</p>
         </div>
 
         <div style={{

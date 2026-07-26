@@ -7,23 +7,23 @@ const year = new Date().getFullYear();
 <footer class="flex flex-col gap-6 pb-4">
   <!-- The game -->
   <section
-    class="flex flex-col gap-4 rounded-2xl border border-neutral-800 bg-neutral-900/40 p-5 md:p-6"
+    class="flex flex-col gap-4 rounded-2xl border border-hair bg-surface/40 p-5 md:p-6"
     aria-label="Mini runner game"
   >
     <div class="flex items-center justify-between">
-      <p class="font-mono text-[11px] uppercase tracking-[0.2em] text-amber-500">
+      <p class="font-mono text-[11px] uppercase tracking-[0.2em] text-accent">
         ▲ Off the record
       </p>
-      <p class="flex items-center gap-3 font-mono text-[11px] text-neutral-500">
-        <span>hi <span id="game-hi" class="text-neutral-300">0</span></span>
-        <span class="text-neutral-700">·</span>
-        <span>score <span id="game-score" class="text-neutral-100">0</span></span>
+      <p class="flex items-center gap-3 font-mono text-[11px] text-muted">
+        <span>hi <span id="game-hi" class="text-ink-soft">0</span></span>
+        <span class="text-muted">·</span>
+        <span>score <span id="game-score" class="text-ink">0</span></span>
       </p>
     </div>
 
     <div
       id="game-wrap"
-      class="group relative h-[120px] w-full cursor-pointer select-none overflow-hidden rounded-lg border border-neutral-800/80 bg-neutral-950/40"
+      class="group relative h-[120px] w-full cursor-pointer select-none overflow-hidden rounded-lg border border-hair/80 bg-page/40 outline-none focus-visible:border-accent/60 focus-visible:ring-1 focus-visible:ring-accent/40"
       tabindex="0"
       role="button"
       aria-label="Press space, click or tap to jump"
@@ -35,10 +35,10 @@ const year = new Date().getFullYear();
         id="game-overlay"
         class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-1 text-center transition-opacity duration-300"
       >
-        <p id="game-title" class="font-display text-sm text-neutral-200">
+        <p id="game-title" class="font-display text-sm text-ink">
           Jump over the cacti.
         </p>
-        <p class="font-mono text-[11px] uppercase tracking-wider text-neutral-500">
+        <p class="font-mono text-[11px] uppercase tracking-wider text-muted">
           <span class="hidden md:inline">press space / click</span>
           <span class="md:hidden">tap</span> to play
         </p>
@@ -48,16 +48,16 @@ const year = new Date().getFullYear();
 
   <!-- Real footer -->
   <div
-    class="flex flex-col items-center justify-between gap-4 border-t border-neutral-900 pt-6 text-xs text-neutral-500 md:flex-row"
+    class="flex flex-col items-center justify-between gap-4 border-t border-hair pt-6 text-xs text-muted md:flex-row"
   >
     <p class="font-mono">
       © {year} Sabareesh S · built with
-      <span class="text-neutral-400">Astro</span> &
-      <span class="text-neutral-400">Tailwind</span>
+      <span class="text-body">Astro</span> &
+      <span class="text-body">Tailwind</span>
     </p>
     <div class="flex items-center gap-4">
       <SocialLinks />
-      <a href="#" class="font-mono hover:text-neutral-100">↑ top</a>
+      <a href="#" class="font-mono hover:text-ink">↑ top</a>
     </div>
   </div>
 </footer>
@@ -73,11 +73,14 @@ const year = new Date().getFullYear();
   if (wrap && canvas && overlay && titleEl && scoreEl && hiEl) {
     const ctx = canvas.getContext("2d")!;
 
-    // Palette (matches Tailwind theme)
+    // Palette (theme-aware; amber player stays constant)
     const AMBER = "#f59e0b";
-    const GROUND = "#404040"; // neutral-700
-    const CACTUS = "#737373"; // neutral-500
-    const DOT = "#262626"; // neutral-800
+    function palette() {
+      const light = document.documentElement.classList.contains("light");
+      return light
+        ? { ground: "#cfcbc2", cactus: "#a29e95", dot: "#d8d4cc" }
+        : { ground: "#404040", cactus: "#737373", dot: "#262626" };
+    }
 
     const HI_KEY = "sabareesh-runner-hi";
 
@@ -231,9 +234,10 @@ const year = new Date().getFullYear();
 
     function draw() {
       ctx.clearRect(0, 0, W, H);
+      const pal = palette();
 
       // bg dots
-      ctx.fillStyle = DOT;
+      ctx.fillStyle = pal.dot;
       for (const d of dots) {
         ctx.beginPath();
         ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
@@ -242,7 +246,7 @@ const year = new Date().getFullYear();
 
       // ground line
       const gy = groundY();
-      ctx.strokeStyle = GROUND;
+      ctx.strokeStyle = pal.ground;
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(0, gy + 0.5);
@@ -250,7 +254,7 @@ const year = new Date().getFullYear();
       ctx.stroke();
 
       // obstacles (cacti)
-      ctx.fillStyle = CACTUS;
+      ctx.fillStyle = pal.cactus;
       for (const o of obstacles) {
         const oy = gy - o.h;
         rr(ctx, o.x, oy, o.w, o.h, 2);
@@ -333,5 +337,13 @@ const year = new Date().getFullYear();
       { threshold: 0.2 }
     );
     io.observe(wrap);
+
+    // Repaint the idle frame when the theme changes
+    new MutationObserver(() => {
+      if (state !== "playing") idleDraw();
+    }).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
   }
 </script>

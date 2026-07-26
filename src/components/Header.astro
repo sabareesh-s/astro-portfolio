@@ -5,24 +5,61 @@ import presentation from "@/data/presentation";
 const pathname = removeTrailingSlash(Astro.url.pathname);
 ---
 
-<header class="z-40 flex w-full flex-col gap-2 md:flex-row md:justify-between">
-  <a href={`mailto:${presentation.mail}`} class="hover:text-neutral-100"
+<header
+  class="z-40 flex w-full flex-col gap-2 md:flex-row md:items-center md:justify-between"
+>
+  <a href={`mailto:${presentation.mail}`} class="hover:text-ink"
     >{presentation.mail}</a
   >
 
-  <nav role="navigation">
-    <ul role="list" class="flex flex-row gap-3">
-      <li>
-        <a href="#work" class="hover:text-neutral-100">Work</a>
-      </li>
-      <li>/</li>
-      <li>
-        <a href="#experience" class="hover:text-neutral-100">Experience</a>
-      </li>
-      <li>/</li>
-      <li>
-        <a href="#contact" class="hover:text-neutral-100">Contact</a>
-      </li>
-    </ul>
-  </nav>
+  <div class="flex items-center gap-4">
+    <nav role="navigation">
+      <ul role="list" class="flex flex-row gap-3">
+        <li>
+          <a href="#work" class="hover:text-ink">Work</a>
+        </li>
+        <li>/</li>
+        <li>
+          <a href="#experience" class="hover:text-ink">Experience</a>
+        </li>
+        <li>/</li>
+        <li>
+          <a href="#contact" class="hover:text-ink">Contact</a>
+        </li>
+      </ul>
+    </nav>
+
+    <button
+      id="theme-toggle"
+      type="button"
+      aria-label="Toggle light and dark theme"
+      class="theme-toggle -my-1 flex h-7 w-7 items-center justify-center rounded-full border border-hair text-muted transition-colors hover:border-hair-strong hover:text-ink"
+    >
+      <svg
+        class="sun h-[15px] w-[15px]"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="4"></circle>
+        <path
+          d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
+        ></path>
+      </svg>
+      <svg
+        class="moon h-[15px] w-[15px]"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </div>
 </header>
