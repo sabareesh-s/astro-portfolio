@@ -16,7 +16,7 @@ const presentation: Presentation = {
   title: "Hey, I’m Sabareesh.",
   // profile: "./profile.webp",
   description:
-    "A web developer based in Bangalore with a keen eye for design. Webflow is my home base - I design and build marketing sites end to end, from layout to GSAP motion to SEO - and I put together fast, polished interfaces in React, Next.js, TypeScript and Tailwind. I build 3D on the web with Three.js and handle the full-stack side too. Currently building the web at Alaan.",
+    "A web developer based in Bangalore with a keen eye for design. I design and build marketing sites end to end in Webflow, from layout to GSAP motion to SEO, and put together fast, polished interfaces in React, Next.js, TypeScript and Tailwind. I build 3D on the web with Three.js and handle the full-stack side too. Currently building the web at Alaan.",
   socials: [
     {
       label: "LinkedIn",
