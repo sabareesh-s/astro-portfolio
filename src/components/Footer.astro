@@ -1,0 +1,337 @@
+---
+import SocialLinks from "@/components/SocialLinks.astro";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="flex flex-col gap-6 pb-4">
+  <!-- The game -->
+  <section
+    class="flex flex-col gap-4 rounded-2xl border border-neutral-800 bg-neutral-900/40 p-5 md:p-6"
+    aria-label="Mini runner game"
+  >
+    <div class="flex items-center justify-between">
+      <p class="font-mono text-[11px] uppercase tracking-[0.2em] text-amber-500">
+        ▲ Off the record
+      </p>
+      <p class="flex items-center gap-3 font-mono text-[11px] text-neutral-500">
+        <span>hi <span id="game-hi" class="text-neutral-300">0</span></span>
+        <span class="text-neutral-700">·</span>
+        <span>score <span id="game-score" class="text-neutral-100">0</span></span>
+      </p>
+    </div>
+
+    <div
+      id="game-wrap"
+      class="group relative h-[120px] w-full cursor-pointer select-none overflow-hidden rounded-lg border border-neutral-800/80 bg-neutral-950/40"
+      tabindex="0"
+      role="button"
+      aria-label="Press space, click or tap to jump"
+    >
+      <canvas id="game-canvas" class="absolute inset-0 h-full w-full"></canvas>
+
+      <!-- Overlay messages -->
+      <div
+        id="game-overlay"
+        class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-1 text-center transition-opacity duration-300"
+      >
+        <p id="game-title" class="font-display text-sm text-neutral-200">
+          Jump over the cacti.
+        </p>
+        <p class="font-mono text-[11px] uppercase tracking-wider text-neutral-500">
+          <span class="hidden md:inline">press space / click</span>
+          <span class="md:hidden">tap</span> to play
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Real footer -->
+  <div
+    class="flex flex-col items-center justify-between gap-4 border-t border-neutral-900 pt-6 text-xs text-neutral-500 md:flex-row"
+  >
+    <p class="font-mono">
+      © {year} Sabareesh S · built with
+      <span class="text-neutral-400">Astro</span> &
+      <span class="text-neutral-400">Tailwind</span>
+    </p>
+    <div class="flex items-center gap-4">
+      <SocialLinks />
+      <a href="#" class="font-mono hover:text-neutral-100">↑ top</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const wrap = document.getElementById("game-wrap") as HTMLDivElement | null;
+  const canvas = document.getElementById("game-canvas") as HTMLCanvasElement | null;
+  const overlay = document.getElementById("game-overlay") as HTMLDivElement | null;
+  const titleEl = document.getElementById("game-title") as HTMLParagraphElement | null;
+  const scoreEl = document.getElementById("game-score") as HTMLElement | null;
+  const hiEl = document.getElementById("game-hi") as HTMLElement | null;
+
+  if (wrap && canvas && overlay && titleEl && scoreEl && hiEl) {
+    const ctx = canvas.getContext("2d")!;
+
+    // Palette (matches Tailwind theme)
+    const AMBER = "#f59e0b";
+    const GROUND = "#404040"; // neutral-700
+    const CACTUS = "#737373"; // neutral-500
+    const DOT = "#262626"; // neutral-800
+
+    const HI_KEY = "sabareesh-runner-hi";
+
+    let W = 0;
+    let H = 0;
+    let dpr = 1;
+
+    function resize() {
+      const rect = wrap!.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = rect.width;
+      H = rect.height;
+      canvas!.width = Math.round(W * dpr);
+      canvas!.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    // Game state
+    const groundY = () => H - 26;
+    const player = { x: 46, y: 0, vy: 0, size: 16, onGround: true };
+    let obstacles: { x: number; w: number; h: number }[] = [];
+    let dots: { x: number; y: number; r: number; s: number }[] = [];
+    let speed = 0;
+    let score = 0;
+    let hi = 0;
+    let spawnIn = 0;
+    let state: "idle" | "playing" | "over" = "idle";
+    let raf = 0;
+    let lastT = 0;
+
+    try {
+      hi = parseInt(localStorage.getItem(HI_KEY) || "0", 10) || 0;
+    } catch {}
+    hiEl!.textContent = String(hi);
+
+    function seedDots() {
+      dots = Array.from({ length: 14 }, (_, i) => ({
+        x: (i / 14) * W + Math.random() * 40,
+        y: 12 + Math.random() * (H - 50),
+        r: Math.random() < 0.5 ? 1 : 1.5,
+        s: 0.15 + Math.random() * 0.4,
+      }));
+    }
+
+    function reset() {
+      player.y = groundY() - player.size;
+      player.vy = 0;
+      player.onGround = true;
+      obstacles = [];
+      speed = 3.4;
+      score = 0;
+      spawnIn = 40;
+      scoreEl!.textContent = "0";
+    }
+
+    function start() {
+      if (state === "playing") return;
+      reset();
+      state = "playing";
+      overlay!.style.opacity = "0";
+      lastT = 0;
+      raf = requestAnimationFrame(loop);
+    }
+
+    function gameOver() {
+      state = "over";
+      cancelAnimationFrame(raf);
+      const s = Math.floor(score);
+      if (s > hi) {
+        hi = s;
+        hiEl!.textContent = String(hi);
+        try {
+          localStorage.setItem(HI_KEY, String(hi));
+        } catch {}
+        titleEl!.textContent = `New high score: ${hi} 🎉`;
+      } else {
+        titleEl!.textContent = `Game over · ${s}. Again?`;
+      }
+      overlay!.style.opacity = "1";
+    }
+
+    function jump() {
+      if (state === "idle" || state === "over") {
+        start();
+        return;
+      }
+      if (player.onGround) {
+        player.vy = -6.6;
+        player.onGround = false;
+      }
+    }
+
+    function loop(t: number) {
+      if (!lastT) lastT = t;
+      // Normalised delta (~1 at 60fps), clamped so tab-switches don't teleport
+      const dt = Math.min((t - lastT) / 16.667, 3);
+      lastT = t;
+      update(dt);
+      draw();
+      if (state === "playing") raf = requestAnimationFrame(loop);
+    }
+
+    function update(dt: number) {
+      speed += 0.0016 * dt;
+      score += 0.15 * speed * dt;
+      scoreEl!.textContent = String(Math.floor(score));
+
+      // Player physics
+      player.vy += 0.42 * dt;
+      player.y += player.vy * dt;
+      const floor = groundY() - player.size;
+      if (player.y >= floor) {
+        player.y = floor;
+        player.vy = 0;
+        player.onGround = true;
+      }
+
+      // Obstacles
+      spawnIn -= dt;
+      if (spawnIn <= 0) {
+        const h = 14 + Math.random() * 18;
+        obstacles.push({ x: W + 10, w: 8 + Math.random() * 10, h });
+        spawnIn = 60 + Math.random() * 60 - Math.min(speed * 3, 30);
+      }
+      for (const o of obstacles) o.x -= speed * dt;
+      obstacles = obstacles.filter((o) => o.x + o.w > -10);
+
+      // Drifting bg dots
+      for (const d of dots) {
+        d.x -= d.s * speed * 0.4 * dt;
+        if (d.x < -2) {
+          d.x = W + 2;
+          d.y = 12 + Math.random() * (H - 50);
+        }
+      }
+
+      // Collision
+      const p = { x: player.x, y: player.y, w: player.size, h: player.size };
+      for (const o of obstacles) {
+        const oy = groundY() - o.h;
+        if (
+          p.x + p.w - 3 > o.x &&
+          p.x + 3 < o.x + o.w &&
+          p.y + p.h - 2 > oy
+        ) {
+          gameOver();
+          return;
+        }
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+
+      // bg dots
+      ctx.fillStyle = DOT;
+      for (const d of dots) {
+        ctx.beginPath();
+        ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // ground line
+      const gy = groundY();
+      ctx.strokeStyle = GROUND;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, gy + 0.5);
+      ctx.lineTo(W, gy + 0.5);
+      ctx.stroke();
+
+      // obstacles (cacti)
+      ctx.fillStyle = CACTUS;
+      for (const o of obstacles) {
+        const oy = gy - o.h;
+        rr(ctx, o.x, oy, o.w, o.h, 2);
+        ctx.fill();
+      }
+
+      // player
+      ctx.fillStyle = AMBER;
+      rr(ctx, player.x, player.y, player.size, player.size, 3);
+      ctx.fill();
+    }
+
+    function rr(
+      c: CanvasRenderingContext2D,
+      x: number,
+      y: number,
+      w: number,
+      h: number,
+      r: number
+    ) {
+      const rad = Math.min(r, w / 2, h / 2);
+      c.beginPath();
+      c.moveTo(x + rad, y);
+      c.arcTo(x + w, y, x + w, y + h, rad);
+      c.arcTo(x + w, y + h, x, y + h, rad);
+      c.arcTo(x, y + h, x, y, rad);
+      c.arcTo(x, y, x + w, y, rad);
+      c.closePath();
+    }
+
+    // Idle: draw a static frame so it looks intentional before play
+    function idleDraw() {
+      player.y = groundY() - player.size;
+      draw();
+    }
+
+    resize();
+    seedDots();
+    idleDraw();
+
+    // Input
+    wrap.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      wrap.focus();
+      jump();
+    });
+
+    wrap.addEventListener("keydown", (e) => {
+      if (e.code === "Space" || e.code === "ArrowUp" || e.code === "Enter") {
+        e.preventDefault();
+        jump();
+      }
+    });
+
+    // Only hijack spacebar globally while actively playing
+    window.addEventListener("keydown", (e) => {
+      if (state === "playing" && (e.code === "Space" || e.code === "ArrowUp")) {
+        e.preventDefault();
+        jump();
+      }
+    });
+
+    let rt = 0;
+    window.addEventListener("resize", () => {
+      clearTimeout(rt);
+      rt = window.setTimeout(() => {
+        resize();
+        seedDots();
+        if (state !== "playing") idleDraw();
+      }, 120);
+    });
+
+    // Pause if scrolled out of view (courtesy + perf)
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const en of entries) {
+          if (!en.isIntersecting && state === "playing") gameOver();
+        }
+      },
+      { threshold: 0.2 }
+    );
+    io.observe(wrap);
+  }
+</script>

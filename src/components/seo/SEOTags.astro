@@ -9,14 +9,14 @@ const { title, description, noindex, og } = Astro.props;
 
 const DEFAULT_TITLE_PAGE = "Sabareesh S - Portfolio";
 const DEFAULT_DESCRIPTION_PAGE =
-  "A minimal portfolio template built with Astro and Tailwindcss.";
+  "Sabareesh S - Webflow & front-end developer in Bangalore. Marketing sites, motion, and the odd Three.js experiment.";
 const DEFAULT_URL_SITE = SITE_URL;
 
 const openGraph = {
   title: title || og?.title || DEFAULT_TITLE_PAGE,
   type: og?.type || "website",
   image: og?.image || "/opengraph-image.jpg",
-  alt: og?.alt || "astro portfolio template image",
+  alt: og?.alt || "Sabareesh S - portfolio",
   url: DEFAULT_URL_SITE,
   description: og?.description || DEFAULT_DESCRIPTION_PAGE,
 };

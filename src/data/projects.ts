@@ -1,5 +1,7 @@
 export type Project = {
   title: string;
+  description?: string;
+  image?: string;
   techs: string[];
   link?: string;
   isComingSoon?: boolean;
@@ -7,6 +9,22 @@ export type Project = {
 };
 
 const projects: Project[] = [
+  {
+    title: "Rose Island",
+    description:
+      "Cinematic Webflow landing page telling the story of the 1968 micronation.",
+    image: "/work/rose-island.jpeg",
+    techs: ["Webflow", "GSAP", "Animation"],
+    link: "https://rosa-ef.webflow.io/",
+  },
+  {
+    title: "Ariane Launcher",
+    description:
+      "Interactive, space-themed Webflow concept for a modular rocket launcher.",
+    image: "/work/ariane.jpeg",
+    techs: ["Webflow", "GSAP", "Interaction"],
+    link: "https://ariane-space-ed.webflow.io/",
+  },
   {
     title: "Kanban Board UI",
     techs: ["ReactJS", "JavaScript", "Tailwind CSS"],

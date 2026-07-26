@@ -13,10 +13,10 @@ type Presentation = {
 
 const presentation: Presentation = {
   mail: "sabareesh1221@gmail.com",
-  title: "Hi, I’m Sabareesh 👋",
+  title: "Hey, I’m Sabareesh.",
   // profile: "./profile.webp",
   description:
-    "Welcome to my portfolio! I'm Sabareesh S, a passionate *Front-end developer* with a keen eye for design. My journey in web development has allowed me to craft visually stunning and user-friendly web pages using *HTML*. I am skilled in using tools like *TypeScript*, *React*, *Next.js*, *Tailwind CSS*, *Material UI*, and other frontend libraries. Additionally, I have experience with *Storybook* and *Three.js*, which allow me to design interactive and visually appealing user interfaces. Explore my work to see how I blend creativity and code, utilizing these technologies, to bring ideas to life. Let's connect and collaborate on your next project!",
+    "A web developer based in Bangalore with a keen eye for design. Webflow is my home base - I design and build marketing sites end to end, from layout to GSAP motion to SEO - and I put together fast, polished interfaces in React, Next.js, TypeScript and Tailwind. I build 3D on the web with Three.js and handle the full-stack side too. Currently building the web at Alaan.",
   socials: [
     {
       label: "LinkedIn",
@@ -25,6 +25,10 @@ const presentation: Presentation = {
     {
       label: "Github",
       link: "https://github.com/sabareesh-s",
+    },
+    {
+      label: "WhatsApp",
+      link: "https://wa.me/916238756780?text=Hi%20Sabareesh!%20Saw%20your%20portfolio.",
     },
   ],
 };
