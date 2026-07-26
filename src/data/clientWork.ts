@@ -5,7 +5,7 @@ const clientWork: Project[] = [
   {
     title: "Alaan",
     description:
-      "Product page for Alaan's AI-native corporate card. My current work.",
+      "Product page for the SuperCard® - Alaan's AI-native corporate card. My current work.",
     image: "/work/alaan-supercard.jpeg",
     techs: ["Webflow", "GSAP", "SEO"],
     link: "https://www.alaan.com/supercard",
