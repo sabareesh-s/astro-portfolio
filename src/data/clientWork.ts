@@ -3,9 +3,9 @@ import type { Project } from "@/data/projects";
 // Live client sites designed & built in Webflow. First item renders featured.
 const clientWork: Project[] = [
   {
-    title: "Alaan · SuperCard",
+    title: "Alaan",
     description:
-      "Product page for the SuperCard® - Alaan's AI-native corporate card. My current work.",
+      "I maintain alaan.com end to end - design, build, motion, SEO. Shown here: the SuperCard product page.",
     image: "/work/alaan-supercard.jpeg",
     techs: ["Webflow", "GSAP", "SEO"],
     link: "https://www.alaan.com/supercard",

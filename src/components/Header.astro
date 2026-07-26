@@ -1,65 +1,135 @@
 ---
-import removeTrailingSlash from "@/utils/removeTrailingSlash";
 import presentation from "@/data/presentation";
-
-const pathname = removeTrailingSlash(Astro.url.pathname);
 ---
 
-<header
-  class="z-40 flex w-full flex-col gap-2 md:flex-row md:items-center md:justify-between"
->
-  <a href={`mailto:${presentation.mail}`} class="hover:text-ink"
-    >{presentation.mail}</a
-  >
-
-  <div class="flex items-center gap-4">
-    <nav role="navigation">
-      <ul role="list" class="flex flex-row gap-3">
-        <li>
-          <a href="#work" class="hover:text-ink">Work</a>
-        </li>
-        <li>/</li>
-        <li>
-          <a href="#experience" class="hover:text-ink">Experience</a>
-        </li>
-        <li>/</li>
-        <li>
-          <a href="#contact" class="hover:text-ink">Contact</a>
-        </li>
-      </ul>
-    </nav>
-
-    <button
-      id="theme-toggle"
-      type="button"
-      aria-label="Toggle light and dark theme"
-      class="theme-toggle -my-1 flex h-7 w-7 items-center justify-center rounded-full border border-hair text-muted transition-colors hover:border-hair-strong hover:text-ink"
+<header class="z-40 flex w-full flex-col gap-3">
+  <div class="flex w-full items-center justify-between">
+    <a href={`mailto:${presentation.mail}`} class="hover:text-ink"
+      >{presentation.mail}</a
     >
-      <svg
-        class="sun h-[15px] w-[15px]"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+
+    <div class="flex items-center gap-3">
+      <!-- Desktop nav -->
+      <nav role="navigation" class="hidden md:block">
+        <ul role="list" class="flex flex-row gap-3">
+          <li><a href="#work" class="hover:text-ink">Work</a></li>
+          <li>/</li>
+          <li><a href="#experience" class="hover:text-ink">Experience</a></li>
+          <li>/</li>
+          <li><a href="#contact" class="hover:text-ink">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- Theme toggle (all sizes) -->
+      <button
+        id="theme-toggle"
+        type="button"
+        aria-label="Toggle light and dark theme"
+        class="theme-toggle flex h-7 w-7 items-center justify-center rounded-full border border-hair text-muted transition-colors hover:border-hair-strong hover:text-ink"
       >
-        <circle cx="12" cy="12" r="4"></circle>
-        <path
-          d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
-        ></path>
-      </svg>
-      <svg
-        class="moon h-[15px] w-[15px]"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        <svg
+          class="sun h-[15px] w-[15px]"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="4"></circle>
+          <path
+            d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
+          ></path>
+        </svg>
+        <svg
+          class="moon h-[15px] w-[15px]"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+
+      <!-- Hamburger (mobile only) -->
+      <button
+        id="nav-toggle"
+        type="button"
+        aria-label="Toggle menu"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+        class="nav-toggle flex h-7 w-7 flex-col items-center justify-center gap-[4px] text-body hover:text-ink md:hidden"
       >
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-      </svg>
-    </button>
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+    </div>
   </div>
+
+  <!-- Mobile collapsible nav -->
+  <nav id="mobile-nav" class="mobile-nav md:hidden" aria-label="Mobile">
+    <ul class="flex min-h-0 flex-col gap-1 overflow-hidden border-t border-hair pt-3">
+      <li><a href="#work" class="block py-1.5 hover:text-ink">Work</a></li>
+      <li>
+        <a href="#experience" class="block py-1.5 hover:text-ink">Experience</a>
+      </li>
+      <li><a href="#contact" class="block py-1.5 hover:text-ink">Contact</a></li>
+    </ul>
+  </nav>
 </header>
+
+<style>
+  /* Collapsible panel: animate grid rows 0fr -> 1fr for a smooth height reveal */
+  .mobile-nav {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition: grid-template-rows 0.32s ease, opacity 0.32s ease;
+  }
+  .mobile-nav.open {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+
+  /* Hamburger -> X */
+  .nav-toggle .bar {
+    display: block;
+    width: 18px;
+    height: 1.5px;
+    border-radius: 2px;
+    background: currentColor;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  .nav-toggle.open .bar:nth-child(1) {
+    transform: translateY(5.5px) rotate(45deg);
+  }
+  .nav-toggle.open .bar:nth-child(2) {
+    opacity: 0;
+  }
+  .nav-toggle.open .bar:nth-child(3) {
+    transform: translateY(-5.5px) rotate(-45deg);
+  }
+</style>
+
+<script>
+  const btn = document.getElementById("nav-toggle");
+  const menu = document.getElementById("mobile-nav");
+  if (btn && menu) {
+    const setOpen = (open: boolean) => {
+      menu.classList.toggle("open", open);
+      btn.classList.toggle("open", open);
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+    };
+    btn.addEventListener("click", () =>
+      setOpen(!menu.classList.contains("open"))
+    );
+    // Collapse after tapping a link
+    menu.querySelectorAll("a").forEach((a) =>
+      a.addEventListener("click", () => setOpen(false))
+    );
+  }
+</script>
