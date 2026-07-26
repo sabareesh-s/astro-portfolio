@@ -14,6 +14,7 @@ import skills from "@/data/skills";
 
 const experiments = projects.filter((p) => p.image);
 const codeProjects = projects.filter((p) => !p.image);
+const whatsapp = presentation.socials.find((s) => s.label === "WhatsApp")?.link;
 ---
 
 <Layout>
@@ -202,7 +203,8 @@ const codeProjects = projects.filter((p) => !p.image);
         Working on something, or just want to talk shop? I'm at <Link
           href={`mailto:${presentation.mail}`}
           label={presentation.mail}
-        /> - usually reply the same day.
+        /> or <Link href={whatsapp} label={presentation.phone} /> - usually reply
+        the same day.
       </p>
       <SocialLinks />
     </article>
